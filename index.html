@@ -20,28 +20,64 @@
 
     {
       const Menu = (props) => {
+        const decrement = () => {
+          props.onDecrement();
+        };
+
+        const increment = () => {
+          props.onIncrement();
+        };
+
         return (
           <li>
-            <button>-</button>
-            <button>+</button>
-            {props.name} ({props.price}円 X 0個)
+            <button onClick={decrement}>-</button>
+            <button onClick={increment}>+</button>
+            {props.name} ({props.price}円 X {props.count}個)
           </li>
         );
       };
 
       const App = () => {
+        const [counts, setCounts] = React.useState([0, 0, 0]);
         const menus = [
           { id: 0, name: '牛丼', price: 400 },
           { id: 1, name: 'カレー', price: 500 },
           { id: 2, name: 'サラダ', price: 300 },
         ];
 
+        // const totalPrice = () => {
+        //   let sum = 0;
+        //   for (let i = 0; i < menus.length; i++) {
+        //     sum += menus[i].price * counts[i];
+        //   }
+        //   return sum;
+        // };
+
+        const total =
+          (menus[0].price * counts[0]) +
+          (menus[1].price * counts[1]) +
+          (menus[2].price * counts[2]);
+
+        const decrementMenu = () => {
+          const newCounts = [...counts];
+          newCounts[menuId]--;
+          setCounts(newCounts);
+          setCounts();
+        };
+
+        const incrementMenu = () => {
+          console.log('plus button clicked!');
+        };
+
         const menuItems = menus.map((menu) => {
           return (
             <Menu
               key={menu.id}
+              count={counts[menu.id]}
               name={menu.name}
               price={menu.price}
+              onDecrement={decrementMenu}
+              onIncrement={incrementMenu}
             />
           );
         });
@@ -52,7 +88,7 @@
             <ul className="menus">
               {menuItems}
             </ul>
-            <p>合計: 0円</p>
+            <p>合計: {total}円</p>
           </>
         );
       };
